@@ -10,7 +10,7 @@ import URI from 'vscode-uri';
 import * as Strings from '../utils/strings';
 import * as Parser from '../parser/jsonParser';
 import { SchemaRequestService, WorkspaceContextService, PromiseConstructor, Thenable } from '../jsonLanguageTypes';
-
+import { MinecraftSchemas } from "../minecraftServices/minecraftSchemas";
 
 import * as nls from 'vscode-nls';
 const localize = nls.loadMessageBundle();
@@ -206,6 +206,8 @@ export class JSONSchemaService implements IJSONSchemaService {
 	private requestService: SchemaRequestService;
 	private promiseConstructor: PromiseConstructor;
 
+	private minecraftSchemas: MinecraftSchemas;
+
 	constructor(requestService: SchemaRequestService, contextService?: WorkspaceContextService, promiseConstructor?: PromiseConstructor) {
 		this.contextService = contextService;
 		this.requestService = requestService;
@@ -218,6 +220,8 @@ export class JSONSchemaService implements IJSONSchemaService {
 		this.filePatternAssociations = [];
 		this.filePatternAssociationById = {};
 		this.registeredSchemasIds = {};
+
+		this.minecraftSchemas = new MinecraftSchemas();
 	}
 
 	public getRegisteredSchemaIds(filter?: (scheme) => boolean): string[] {
@@ -356,7 +360,7 @@ export class JSONSchemaService implements IJSONSchemaService {
 			(error: any) => {
 				let errorMessage = error.toString();
 				let errorSplit = error.toString().split('Error: ');
-				if(errorSplit.length > 1) {
+				if (errorSplit.length > 1) {
 					// more concise error message, URL and context are attached by caller anyways
 					errorMessage = errorSplit[1];
 				}
@@ -516,6 +520,11 @@ export class JSONSchemaService implements IJSONSchemaService {
 		}
 		if (schemas.length > 0) {
 			return this.createCombinedSchema(resource, schemas).getResolvedSchema();
+		}
+
+		const id = this.minecraftSchemas.getMinecraftSchemaId(document);
+		if (id) {
+			return this.getOrAddSchemaHandle(id).getResolvedSchema();
 		}
 
 		return this.promise.resolve(null);
