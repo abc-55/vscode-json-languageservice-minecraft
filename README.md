@@ -1,15 +1,12 @@
-# vscode-json-languageservice
-JSON language service extracted from VSCode to be reused, e.g in the Monaco editor.
+# vscode-json-languageservice-minecraft
+A _vscode-json-languageservice_ fork with extra minecraft features
 
-[![npm Package](https://img.shields.io/npm/v/vscode-json-languageservice.svg?style=flat-square)](https://www.npmjs.org/package/vscode-json-languageservice)
-[![NPM Downloads](https://img.shields.io/npm/dm/vscode-json-languageservice.svg)](https://npmjs.org/package/vscode-json-languageservice)
-[![Build Status](https://travis-ci.org/Microsoft/vscode-json-languageservice.svg?branch=master)](https://travis-ci.org/Microsoft/vscode-json-languageservice)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-Why?
+API
 ----
-The _vscode-json-languageservice_ contains the language smarts behind the JSON editing experience of Visual Studio Code
-and the Monaco editor.
+The _vscode-json-languageservice-minecraft_ can be used as a drop-in replacement for
+_vscode-json-languageservice_ with one caveat: the document settings argument
+for `doValidation` should always be `{ comments: 'ignore', trailingCommas: 'error' }`
+because minecraft supports comments but not trailning commas.
  - *doValidation* analyses an input string and returns syntax and lint errros.
  - *doComplete* provides completion proposals for a given location. *doResolve* resolves a completion proposal
  - *doResolve* resolves a completion proposals.
@@ -24,4 +21,4 @@ and the Monaco editor.
 Installation
 ------------
 
-    npm install --save vscode-json-languageservice
+    npm install vscode-json-languageservice-minecraft
