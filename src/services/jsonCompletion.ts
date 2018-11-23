@@ -20,6 +20,8 @@ import {
 
 import { CompletionItem, CompletionItemKind, CompletionList, TextDocument, Position, Range, TextEdit, InsertTextFormat, MarkupContent, MarkupKind } from 'vscode-languageserver-types';
 
+import { MinecraftCompletion } from "../minecraftServices/minecraftCompletion";
+
 import * as nls from 'vscode-nls';
 const localize = nls.loadMessageBundle();
 
@@ -27,6 +29,8 @@ const localize = nls.loadMessageBundle();
 export class JSONCompletion {
 
 	private supportsMarkdown: boolean | undefined;
+
+	private minecraftCompletion: MinecraftCompletion = new MinecraftCompletion();
 
 	constructor(
 		private schemaService: SchemaService.IJSONSchemaService,
@@ -358,7 +362,7 @@ export class JSONCompletion {
 		}
 
 		if (!node) {
-			this.addSchemaValueCompletions(schema.schema, '', collector, types);
+			this.addSchemaValueCompletions(doc, schema.schema, '', collector, types);
 			return;
 		}
 
@@ -381,16 +385,16 @@ export class JSONCompletion {
 						if (Array.isArray(s.schema.items)) {
 							let index = this.findItemAtOffset(node, document, offset);
 							if (index < s.schema.items.length) {
-								this.addSchemaValueCompletions(s.schema.items[index], separatorAfter, collector, types);
+								this.addSchemaValueCompletions(doc, s.schema.items[index], separatorAfter, collector, types);
 							}
 						} else {
-							this.addSchemaValueCompletions(s.schema.items, separatorAfter, collector, types);
+							this.addSchemaValueCompletions(doc, s.schema.items, separatorAfter, collector, types);
 						}
 					}
 					if (s.schema.properties) {
 						let propertySchema = s.schema.properties[parentKey];
 						if (propertySchema) {
-							this.addSchemaValueCompletions(propertySchema, separatorAfter, collector, types);
+							this.addSchemaValueCompletions(doc, propertySchema, separatorAfter, collector, types);
 						}
 					}
 				}
@@ -438,19 +442,20 @@ export class JSONCompletion {
 		}
 	}
 
-	private addSchemaValueCompletions(schema: JSONSchemaRef, separatorAfter: string, collector: CompletionsCollector, types: { [type: string]: boolean }): void {
+	private addSchemaValueCompletions(doc: Parser.JSONDocument, schema: JSONSchemaRef, separatorAfter: string, collector: CompletionsCollector, types: { [type: string]: boolean }): void {
 		if (typeof schema === 'object') {
+			this.minecraftCompletion.addMinecraftValueCompletions(doc, schema, separatorAfter, collector);
 			this.addEnumValueCompletions(schema, separatorAfter, collector);
 			this.addDefaultValueCompletions(schema, separatorAfter, collector);
 			this.collectTypes(schema, types);
 			if (Array.isArray(schema.allOf)) {
-				schema.allOf.forEach(s => this.addSchemaValueCompletions(s, separatorAfter, collector, types));
+				schema.allOf.forEach(s => this.addSchemaValueCompletions(doc, s, separatorAfter, collector, types));
 			}
 			if (Array.isArray(schema.anyOf)) {
-				schema.anyOf.forEach(s => this.addSchemaValueCompletions(s, separatorAfter, collector, types));
+				schema.anyOf.forEach(s => this.addSchemaValueCompletions(doc, s, separatorAfter, collector, types));
 			}
 			if (Array.isArray(schema.oneOf)) {
-				schema.oneOf.forEach(s => this.addSchemaValueCompletions(s, separatorAfter, collector, types));
+				schema.oneOf.forEach(s => this.addSchemaValueCompletions(doc, s, separatorAfter, collector, types));
 			}
 		}
 	}
