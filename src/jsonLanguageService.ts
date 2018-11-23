@@ -19,6 +19,8 @@ import { schemaContributions } from './services/configuration';
 import { JSONSchemaService } from './services/jsonSchemaService';
 import { getFoldingRanges } from './services/jsonFolding';
 
+import { minecraftSchemaContributions } from './minecraftServices/minecraftSchemaContributions';
+
 import { format as formatJSON } from 'jsonc-parser';
 import {
 	Thenable,
@@ -61,6 +63,7 @@ export function getLanguageService(params: LanguageServiceParams): LanguageServi
 
 	let jsonSchemaService = new JSONSchemaService(params.schemaRequestService, params.workspaceContext, promise);
 	jsonSchemaService.setSchemaContributions(schemaContributions);
+	jsonSchemaService.setSchemaContributions(minecraftSchemaContributions);
 
 	let jsonCompletion = new JSONCompletion(jsonSchemaService, params.contributions, promise, params.clientCapabilities);
 	let jsonHover = new JSONHover(jsonSchemaService, params.contributions, promise);

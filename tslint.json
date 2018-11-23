@@ -15,5 +15,8 @@
 			"always"
 		],
 		"triple-equals": true
+	},
+	"linterOptions": {
+		"exclude": ["src/minecraftServices/schemas/*"]
 	}
 }
