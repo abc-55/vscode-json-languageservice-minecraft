@@ -1,18 +1,21 @@
 {
-  "name": "vscode-json-languageservice",
-  "version": "3.2.1",
-  "description": "Language service for JSON",
+  "name": "vscode-json-languageservice-minecraft",
+  "version": "0.0.1",
+  "description": "Language service for JSON, modified for Minecraft",
   "main": "./lib/umd/jsonLanguageService.js",
   "typings": "./lib/umd/jsonLanguageService",
   "module": "./lib/esm/jsonLanguageService.js",
-  "author": "Microsoft Corporation",
+  "contributors": [
+    "abc55",
+    "Microsoft Corporation"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-json-languageservice"
+    "url": "https://github.com/minecraft-addon-tools/vscode-json-languageservice-minecraft"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-json-languageservice"
+    "url": "https://github.com/minecraft-addon-tools/vscode-json-languageservice-minecraft/issues"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.33",
@@ -30,7 +33,6 @@
   },
   "scripts": {
     "prepublishOnly": "npm run clean && npm run compile-esm && npm run test",
-    "postpublish": "node ./build/post-publish.js",
     "compile": "tsc -p ./src",
     "compile-esm": "tsc -p ./src/tsconfig.esm.json",
     "clean": "rimraf lib",
