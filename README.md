@@ -15,6 +15,7 @@ because minecraft supports comments but not trailning commas.
  - *findDocumentColors* provides all color symbols in the given document, *getColorPresentations* returns available color formats for a color symbol.
  - *format* formats the code at the given range.
  - *getFoldingRanges* gets folding ranges for the given document
+ - *getSelectionRanges* gets selection ranges for a given location.
 
  - use *parseJSONDocument* create a JSON document from source code, or *newJSONDocument* to create the document from an AST.
 

@@ -18,6 +18,7 @@ import { parse as parseJSON, JSONDocument as InternalJSONDocument, newJSONDocume
 import { schemaContributions } from './services/configuration';
 import { JSONSchemaService } from './services/jsonSchemaService';
 import { getFoldingRanges } from './services/jsonFolding';
+import { getSelectionRanges } from './services/jsonSelectionRanges';
 
 import { minecraftSchemaContributions } from './minecraftServices/minecraftSchemaContributions';
 
@@ -55,6 +56,7 @@ export interface LanguageService {
 	doHover(document: TextDocument, position: Position, doc: JSONDocument): Thenable<Hover | null>;
 	format(document: TextDocument, range: Range, options: FormattingOptions): TextEdit[];
 	getFoldingRanges(document: TextDocument, context?: { rangeLimit?: number }): FoldingRange[];
+	getSelectionRanges(document: TextDocument, position: Position, doc: JSONDocument): Range[];
 }
 
 
@@ -92,7 +94,8 @@ export function getLanguageService(params: LanguageServiceParams): LanguageServi
 		findDocumentColors: jsonDocumentSymbols.findDocumentColors.bind(jsonDocumentSymbols),
 		getColorPresentations: jsonDocumentSymbols.getColorPresentations.bind(jsonDocumentSymbols),
 		doHover: jsonHover.doHover.bind(jsonHover),
-		getFoldingRanges: getFoldingRanges,
+		getFoldingRanges,
+		getSelectionRanges,
 		format: (d, r, o) => {
 			let range = void 0;
 			if (r) {
