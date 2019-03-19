@@ -2,8 +2,6 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-'use strict';
-
 import {
 	TextDocument, Position, CompletionItem, CompletionList, Hover, Range, SymbolInformation, Diagnostic,
 	TextEdit, FormattingOptions, MarkedString, DocumentSymbol
@@ -28,7 +26,7 @@ import {
 	ASTNode,
 	Color, ColorInformation, ColorPresentation,
 	LanguageServiceParams, LanguageSettings, DocumentLanguageSettings,
-	FoldingRange, JSONSchema
+	FoldingRange, JSONSchema, SelectionRange
 } from './jsonLanguageTypes';
 
 export type JSONDocument = {};
@@ -56,7 +54,7 @@ export interface LanguageService {
 	doHover(document: TextDocument, position: Position, doc: JSONDocument): Thenable<Hover | null>;
 	format(document: TextDocument, range: Range, options: FormattingOptions): TextEdit[];
 	getFoldingRanges(document: TextDocument, context?: { rangeLimit?: number }): FoldingRange[];
-	getSelectionRanges(document: TextDocument, position: Position, doc: JSONDocument): Range[];
+	getSelectionRanges(document: TextDocument, positions: Position[], doc: JSONDocument): SelectionRange[][];
 }
 
 

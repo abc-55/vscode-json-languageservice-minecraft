@@ -2,9 +2,8 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-'use strict';
 
-import { JSONSchemaService } from './jsonSchemaService';
+import { JSONSchemaService, ResolvedSchema, UnresolvedSchema } from './jsonSchemaService';
 import { JSONDocument } from '../parser/jsonParser';
 import { TextDocument, Diagnostic, DiagnosticSeverity, Range } from 'vscode-languageserver-types';
 import { ErrorCode, PromiseConstructor, Thenable, LanguageSettings, DocumentLanguageSettings, SeverityLevel } from '../jsonLanguageTypes';
@@ -48,7 +47,7 @@ export class JSONValidation {
 				diagnostics.push(problem);
 			}
 		};
-		let getDiagnostics = (schema) => {
+		let getDiagnostics = (schema: ResolvedSchema) => {
 			let trailingCommaSeverity = documentSettings ? toDiagnosticSeverity(documentSettings.trailingCommas) : DiagnosticSeverity.Error;
 			let commentSeverity = documentSettings ? toDiagnosticSeverity(documentSettings.comments) : this.commentSeverity;
 
@@ -95,13 +94,18 @@ export class JSONValidation {
 		};
 
 		if (schema) {
-			return this.promise.resolve(getDiagnostics(schema));
+			const id = schema.id || ('schemaservice://untitled/' + idCounter++);
+			return this.jsonSchemaService.resolveSchemaContent(new UnresolvedSchema(schema), id, {}).then(resolvedSchema => {
+				return getDiagnostics(resolvedSchema);
+			});
 		}
 		return this.jsonSchemaService.getSchemaForResource(textDocument.uri, jsonDocument).then(schema => {
 			return getDiagnostics(schema);
 		});
 	}
 }
+
+let idCounter = 0;
 
 function schemaAllowsComments(schemaRef: JSONSchemaRef) {
 	if (schemaRef && typeof schemaRef === 'object') {

@@ -2,7 +2,6 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-'use strict';
 
 import * as Parser from '../parser/jsonParser';
 import * as Strings from '../utils/strings';
@@ -146,7 +145,10 @@ export class JSONDocumentSymbols {
 	}
 
 	private getKeyLabel(property: PropertyASTNode) {
-		const name =  property.keyNode.value;
+		let name =  property.keyNode.value;
+		if (name) {
+			name = name.replace(/[\n]/g, '↵');
+		}
 		if (name && name.trim()) {
 			return name;
 		}

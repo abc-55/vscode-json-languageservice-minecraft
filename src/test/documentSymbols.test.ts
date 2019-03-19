@@ -2,7 +2,6 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-'use strict';
 
 import * as assert from 'assert';
 import * as JsonSchema from '../jsonSchema';
@@ -167,6 +166,22 @@ suite('JSON Document Symbols', () => {
 		let expected2: ExpectedDocumentSymbol[] = [
 			{ label: '""', kind: SymbolKind.Number, children: [] },
 			{ label: '" "', kind: SymbolKind.Number, children: [] }
+		];
+
+		assertHierarchicalOutline(content, expected2);
+	});
+
+	test('Outline - new line in name', function () {
+		let content = '{ "1\\n2": 1 }';
+
+		let expected = [
+			{ label: '1↵2', kind: SymbolKind.Number }
+		];
+
+		assertOutline(content, expected);
+
+		let expected2: ExpectedDocumentSymbol[] = [
+			{ label: '1↵2', kind: SymbolKind.Number, children: [] }
 		];
 
 		assertHierarchicalOutline(content, expected2);
